@@ -30,9 +30,12 @@
 			font-size: clamp(3rem, 20vw, 15rem);
 			font-weight: 400; line-height: 1; letter-spacing: -0.05em;
 			color: var(--clock-color, #618D61);
-			transition: color 0.3s ease;
+			transition: color 0.3s ease, text-shadow 0.3s ease;
 			font-variant-numeric: tabular-nums;
 			display: flex; align-items: flex-end;
+			
+			/* GLOW EFFECT CONTROLLED BY JS */
+			text-shadow: var(--glow-filter, none);
 		}
 
 		#colon-separator {
@@ -67,8 +70,9 @@
 			background-color: #1a1a1a; margin-bottom: 2rem;
 		}
 
+		/* INCREASED SIZE HERE (40px) */
 		.color-swatch {
-			width: 30px; height: 30px; border-radius: 50%;
+			width: 40px; height: 40px; border-radius: 50%;
 			cursor: pointer; border: 3px solid transparent;
 			transition: border-color 0.15s;
 		}
@@ -76,34 +80,17 @@
 			border-color: #fff; box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 		}
 
-		/* --- BATTERY STYLES --- */
-		#status-bar {
-			opacity: 0; transition: opacity 0.3s ease, filter 0.3s ease;
-			color: var(--clock-color, #618D61) !important;
+		/* Chime Input Style */
+		#chime-time-input {
+			background-color: #333; color: #fff; padding: 8px;
+			border-radius: 6px; border: 1px solid #444; font-size: 1rem;
+			text-align: center; font-family: 'Inter', sans-serif;
+		}
+		input[type="time"]::-webkit-calendar-picker-indicator {
+			filter: invert(1);
 		}
 
-		#status-bar.status-bar-visible {
-			opacity: 1;
-		}
-
-		#battery-icon {
-			width: 50px; height: 25px; border-width: 3px;
-		}
-
-		.battery-low {
-			color: #B3645F !important;
-			animation: pulse-red 2s infinite;
-		}
-		.battery-charging {
-			animation: none !important;
-		}
-
-		@keyframes pulse-red {
-			0%, 100% { opacity: 1; }
-			50% { opacity: 0.5; }
-		}
-
-		/* CHIME FLASHING STYLE - kept in case chime is accidentally triggered */
+		/* CHIME FLASHING STYLE */
 		.alarm-flashing {
 			animation: alarmFlash 1s infinite alternate;
 		}
@@ -122,6 +109,10 @@
 			margin-bottom: 1.5rem;
 		}
 
+		.non-bold-subtitle {
+			font-size: 1rem; font-weight: 400; color: #9CA3AF;
+		}
+
 	</style>
 </head>
 <body>
@@ -132,16 +123,6 @@
 		<span id="colon-separator">:</span>
 		<span id="minutes-display"></span>
 		<span id="seconds"></span>
-	</div>
-</div>
-
-<div id="status-bar" class="absolute top-4 left-4 flex items-center space-x-3 text-base z-50 transition-opacity duration-500">
-	<div id="battery-indicator" class="flex items-center space-x-2">
-		<div id="battery-icon" class="relative w-8 h-4 border-2 border-current rounded-sm">
-			<div id="battery-level" class="h-full bg-current rounded-sm" style="width: 100%;"></div>
-			<div class="absolute top-1/4 -right-1 w-0.5 h-2 bg-current rounded-full"></div>
-		</div>
-		<span id="battery-percentage">--%</span>
 	</div>
 </div>
 
@@ -186,15 +167,15 @@
 						<div class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
 					</label>
 				</div>
-
+				
 				<div class="flex items-center justify-between p-3 bg-gray-800 rounded-b-lg">
-					<span class="text-white">Battery Level</span>
+					<span class="text-white">Aura Effect</span>
 					<label class="relative inline-flex items-center cursor-pointer">
-						<input type="checkbox" id="battery-toggle" onchange="toggleBatteryDisplay(this.checked)" class="sr-only peer">
+						<input type="checkbox" id="aura-toggle" onchange="toggleAura(this.checked)" class="sr-only peer">
 						<div class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
 					</label>
 				</div>
-			</div>
+				</div>
 
 			<div class="setting-group">
 				<h3 class="feature-title">Device Controls</h3>
@@ -207,13 +188,30 @@
 				</div>
 			</div>
 
+			<div class="space-y-4 pt-4">
+				<h3 class="text-white">
+					<span class="text-lg font-semibold">Chime Setup</span>
+				</h3>
+
+				<div class="flex items-center justify-between">
+					<span class="text-white">Chime Time</span>
+					<input type="time" id="chime-time-input" value="08:00">
+				</div>
+
+				<div class="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+					<span class="text-white">Chime ON/OFF</span>
+					<label class="relative inline-flex items-center cursor-pointer">
+						<input type="checkbox" id="chime-toggle" class="sr-only peer">
+						<div class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+					</label>
+				</div>
+			</div>
 			</div>
 	</div>
 </div>
 
 <audio id="chime-audio" src="beep.wav" preload="auto"></audio>
-
-<script>
+<audio id="background-audio" src="silent.mp3" loop preload="auto"></audio> <script>
 	// --- ELEMENT REFERENCES ---
 	const clockContainer = document.getElementById('clock-container');
 	const hoursDisplay = document.getElementById('hours-display');
@@ -225,18 +223,13 @@
 	const brightnessSlider = document.getElementById('brightness-slider');
 	const colorSelector = document.getElementById('color-selector');
 	const secondsToggle = document.getElementById('seconds-toggle');
-	const batteryToggle = document.getElementById('battery-toggle');
 	const formatToggle = document.getElementById('format-toggle');
 	const keepAwakeToggle = document.getElementById('keep-awake-toggle');
-
-	const statusBar = document.getElementById('status-bar');
-	const batteryIndicator = document.getElementById('battery-indicator');
-	const batteryLevel = document.getElementById('battery-level');
-	const batteryPercentage = document.getElementById('battery-percentage');
-
-	// CHIME ELEMENT REFERENCES REMOVED
-
+	const auraToggle = document.getElementById('aura-toggle');
+	const chimeTimeInput = document.getElementById('chime-time-input');
+	const chimeToggle = document.getElementById('chime-toggle');
 	const CHIME_AUDIO = document.getElementById('chime-audio');
+	const BACKGROUND_AUDIO = document.getElementById('background-audio'); // NEW AUDIO REF
 
 	let wakeLockSentinel = null;
 
@@ -245,18 +238,34 @@
 		'Lime': '#618D61', 'Blue': '#4F59A3', 'Yellow': '#968D5D',
 		'Red': '#B3645F', 'Light Grey': '#A9A9A9'
 	};
+	
+	// GLOW PALETTE MAPPING - Hardcoded to your specified rules:
+	const GLOW_PALETTE = {
+		// Main Lime -> Blue Aura
+		'Lime': '#96A0E0', 		
+		// Main Yellow -> Lime Aura
+		'Yellow': '#B9D968', 	
+		// Main Blue -> White/Grey Aura
+		'Blue': '#F0F0F0', 		
+		// Main Red -> Yellow Aura
+		'Red': '#FFD700', 		
+		// Main Light Grey -> Red Aura
+		'Light Grey': '#E09A96',
+		// Safety Fallback (should not be used with your defined set)
+		'Default': '#FFFFFF' 
+	};
 
 	let userState = {
 		brightness: 1.0, colorName: 'Lime', is12HourFormat: false,
-		showSeconds: true, showBattery: false, chimeTime: '08:00', // Chime time preserved for internal logic
+		showSeconds: true, chimeTime: '08:00',
 		isChimeOn: false, isKeptAwake: false, lastChimeTimestamp: 0,
+		isAuraOn: false,
 	};
 
 	let activityTimeout;
 	let isPanelOpen = false;
 	let chimeTriggered = false;
 	let flashTimeoutId = null;
-	let batteryCheckInterval = null;
 
 	// ==========================================
 	// --- CLOCK & DISPLAY LOGIC ---
@@ -264,9 +273,11 @@
 
 	function updateTime() {
 		const now = new Date();
-		let hours = now.getHours();
+		const hours24 = now.getHours();
 		const minutes = String(now.getMinutes()).padStart(2, '0');
-		const seconds = String(now.getSeconds()).padStart(2, '0');
+		const seconds = now.getSeconds();
+
+		let hours = hours24;
 
 		if (userState.is12HourFormat) {
 			hours = hours % 12;
@@ -277,16 +288,16 @@
 		}
 
 		minutesDisplay.textContent = minutes;
-		secondsDisplay.textContent = seconds;
+		secondsDisplay.textContent = String(seconds).padStart(2, '0');
 
 		// BLINK LOGIC
 		if (!userState.showSeconds) {
-			colonSeparator.style.visibility = (now.getSeconds() % 2 === 0) ? 'visible' : 'hidden';
+			colonSeparator.style.visibility = (seconds % 2 === 0) ? 'visible' : 'hidden';
 		} else {
 			colonSeparator.style.visibility = 'visible';
 		}
 
-		checkChime(now);
+		checkChime(now, hours24, minutes, seconds);
 	}
 
 	function toggleSeconds(show) {
@@ -301,6 +312,13 @@
 		localStorage.setItem('is12HourFormat', is12Hour);
 		updateTime();
 	}
+	
+	function toggleAura(isOn) {
+		userState.isAuraOn = isOn;
+		localStorage.setItem('isAuraOn', isOn);
+		applyStyles();
+	}
+
 
 	// ==========================================
 	// --- STYLES & BRIGHTNESS LOGIC ---
@@ -314,6 +332,18 @@
 		const colorValue = CLOCK_COLORS[userState.colorName];
 		document.documentElement.style.setProperty('--clock-color', colorValue);
 
+		// AURA LOGIC - Now using the verified, hardcoded GLOW_PALETTE lookup
+		if (userState.isAuraOn) {
+			const glowColor = GLOW_PALETTE[userState.colorName] || GLOW_PALETTE['Default']; 
+			
+			// Increased spread/opacity slightly for a more visible effect
+			const shadow = `0 0 10px rgba(255, 255, 255, 0.3), 0 0 15px ${glowColor}`; 
+			document.getElementById('time-display').style.textShadow = shadow;
+		} else {
+			document.getElementById('time-display').style.textShadow = 'none';
+		}
+
+
 		document.querySelectorAll('.color-swatch').forEach(swatch => {
 			if (swatch.dataset.colorName === userState.colorName) {
 				swatch.classList.add('selected');
@@ -326,7 +356,7 @@
 	function handleColorChange(name) {
 		userState.colorName = name;
 		localStorage.setItem('clockColorName', name);
-		applyStyles();
+		applyStyles(); 
 	}
 
 	function handleBrightnessChange(event) {
@@ -351,142 +381,49 @@
 	}
 
 	// ==========================================
-	// --- BATTERY LOGIC (The working logic) ---
+	// --- CHIME LOGIC (HTML5 Audio) ---
 	// ==========================================
-
-	function toggleBatteryDisplay(show) {
-		userState.showBattery = show;
-		if (show) {
-			statusBar.classList.add('status-bar-visible');
-		} else {
-			statusBar.classList.remove('status-bar-visible');
-		}
-		localStorage.setItem('showBattery', show);
-	}
-
-	function updateBatteryStatus(status, source = 'Web') {
-		if (!userState.showBattery) return;
-
-		const isCapacitor = source === 'Capacitor';
-		const level = isCapacitor
-			? Math.floor(status.batteryLevel)
-			: Math.floor(status.level * 100);
-
-		const isCharging = isCapacitor
-			? status.isCharging
-			: status.charging;
-
-		batteryPercentage.textContent = `${level}%`;
-		batteryLevel.style.width = `${level}%`;
-
-		batteryIndicator.parentElement.classList.remove('battery-low', 'battery-charging');
-
-		if (isCharging) {
-			batteryIndicator.parentElement.classList.add('battery-charging');
-		} else if (level <= 20) {
-			batteryIndicator.parentElement.classList.add('battery-low');
-		}
-	}
-
-	function setupWebBatteryAPI() {
-		if ('getBattery' in navigator) {
-			navigator.getBattery().then(battery => {
-				updateBatteryStatus(battery, 'Web');
-				battery.addEventListener('levelchange', () => updateBatteryStatus(battery, 'Web'));
-				battery.addEventListener('chargingchange', () => updateBatteryStatus(battery, 'Web'));
-			}).catch(e => {
-				console.error("Web Battery API failed to initialize:", e);
-				if (batteryIndicator) batteryIndicator.innerHTML = 'N/A';
-			});
-		}
-	}
-
-	// *** AGGRESSIVE POLLING LOGIC - Kept because it fixed the delay ***
-	function setupBatteryAPI() {
-		let attempts = 0;
-		const maxAttempts = 30; // 3 seconds total
-
-		function tryCapacitorBattery() {
-			if (window.Capacitor && Capacitor.isPluginAvailable('Battery')) {
-				const Battery = Capacitor.Plugins.Battery;
-
-				// Clear the interval as soon as the plugin is available
-				clearInterval(batteryCheckInterval);
-
-				// 1. Get initial status
-				Battery.getStatus().then(status => {
-					updateBatteryStatus(status, 'Capacitor');
-				}).catch(e => {
-					console.error("Capacitor Battery GetStatus failed after multiple tries, falling back:", e);
-					setupWebBatteryAPI();
-				});
-
-				// 2. Set up listener
-				Battery.addListener('batteryStatusChange', (status) => updateBatteryStatus(status, 'Capacitor'));
-
-				return true; // Success
-			}
-			return false; // Plugin not ready yet
-		}
-
-		// Start polling immediately
-		if (tryCapacitorBattery()) {
-			return; // Plugin was ready on the first try
-		}
-
-		// If not ready, start the interval
-		batteryCheckInterval = setInterval(() => {
-			attempts++;
-			if (tryCapacitorBattery() || attempts >= maxAttempts) {
-				clearInterval(batteryCheckInterval);
-				if (attempts >= maxAttempts) {
-					console.warn("Capacitor Battery plugin failed to initialize within 3 seconds. Using Web API fallback.");
-					setupWebBatteryAPI();
-				}
-			}
-		}, 100);
-	}
-
-	// ==========================================
-	// --- CHIME LOGIC (Background Logic) ---
-	// ==========================================
-
-	function checkChime(now) {
-		// userState.isChimeOn is false by default in this version
-		// It would need to be manually set true in localStorage to function
+	
+	function checkChime(now, hours24, minutes, seconds) {
 		if (!userState.isChimeOn) return;
 
-		const currentHour = now.getHours().toString().padStart(2, '0');
-		const currentMinute = now.getMinutes().toString().padStart(2, '0');
-		const currentTimeString = `${currentHour}:${currentMinute}`;
+		// Get chime hour and minute from state
+		const chimeHour = userState.chimeTime.substring(0, 2);
+		const chimeMinute = userState.chimeTime.substring(3, 5);
 
-		const chimeTimeToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(),
-										parseInt(userState.chimeTime.substring(0, 2)),
-										parseInt(userState.chimeTime.substring(3, 5)), 0);
+		const currentHourString = String(hours24).padStart(2, '0');
+		const currentMinuteString = minutes; 
 
-		// Suppress chime if the app was backgrounded and missed the time
-		if (now.getTime() > chimeTimeToday.getTime() && userState.lastChimeTimestamp < chimeTimeToday.getTime()) {
-			userState.lastChimeTimestamp = now.getTime();
-			localStorage.setItem('lastChimeTimestamp', userState.lastChimeTimestamp);
-			return;
-		}
-
-		if (currentTimeString === userState.chimeTime && now.getSeconds() === 0 && !chimeTriggered) {
-			triggerChime();
-			chimeTriggered = true;
-			setTimeout(() => { chimeTriggered = false; }, 60000); // Reset flag after 1 minute
+		// Check if the current time matches the chime time
+		if (currentHourString === chimeHour && currentMinuteString === chimeMinute) {
+			// Trigger the chime in the first second (0-1 seconds) of the minute
+			if (seconds >= 0 && seconds <= 1 && !chimeTriggered) {
+				triggerChime(now);
+				chimeTriggered = true;
+				// Set a timeout to reset the flag after the minute is over
+				setTimeout(() => { chimeTriggered = false; }, 60000); 
+			}
+		} else {
+			// If we are past the chime minute, ensure the flag is reset
+			if (chimeTriggered) {
+				chimeTriggered = false;
+			}
 		}
 	}
 
-	function triggerChime() {
-		const now = new Date();
+	function triggerChime(now) {
 		userState.lastChimeTimestamp = now.getTime();
 		localStorage.setItem('lastChimeTimestamp', userState.lastChimeTimestamp);
 
 		// --- RELIABLE HTML5 AUDIO PLAYBACK ---
-		CHIME_AUDIO.currentTime = 0; // Rewind to start
 		CHIME_AUDIO.volume = 0.2;
-		CHIME_AUDIO.play().catch(e => console.error("Chime Audio Playback failed:", e));
+		CHIME_AUDIO.currentTime = 0; // Reset to start
+		CHIME_AUDIO.play().catch(e => {
+			console.warn("Chime Audio Playback failed (Interaction may be required):", e);
+			document.body.addEventListener('click', () => {
+				CHIME_AUDIO.play();
+			}, { once: true });
+		});
 
 		clockContainer.classList.add('alarm-flashing');
 		document.addEventListener('click', dismissChime, { once: true });
@@ -503,17 +440,40 @@
 		document.removeEventListener('click', dismissChime, { once: true });
 	}
 
-	// updateChimeStatus() function removed as the UI is gone
+	function updateChimeStatus() {
+		localStorage.setItem('isChimeOn', userState.isChimeOn);
+		localStorage.setItem('chimeTime', userState.chimeTime);
+	}
 
 	// ==========================================
 	// --- DEVICE CONTROLS ---
 	// ==========================================
+
+	/**
+	 * Tries to play a silent loop to prevent the OS from throttling the app 
+	 * when it goes to the background.
+	 */
+	function startBackgroundAudioHack() {
+		BACKGROUND_AUDIO.volume = 0.001; // Should be inaudible
+		
+		BACKGROUND_AUDIO.play().catch(e => {
+			// The OS/browser often prevents autoplay without user interaction.
+			// This is normal, but the user must click/tap the screen at least once.
+			console.warn("Background audio hack play failed (user interaction required):", e);
+		});
+	}
+
+	function stopBackgroundAudioHack() {
+		BACKGROUND_AUDIO.pause();
+		BACKGROUND_AUDIO.currentTime = 0;
+	}
 
 	async function toggleKeepAwake(isOn) {
 		userState.isKeptAwake = isOn;
 		localStorage.setItem('isKeptAwake', isOn);
 
 		if (isOn) {
+			// 1. Request Screen Wake Lock
 			try {
 				if ('wakeLock' in navigator) {
 					wakeLockSentinel = await navigator.wakeLock.request('screen');
@@ -527,13 +487,19 @@
 				userState.isKeptAwake = false;
 				keepAwakeToggle.checked = false;
 			}
+			// 2. Start Background Audio Hack
+			startBackgroundAudioHack(); 
+
 		} else {
+			// 1. Release Screen Wake Lock
 			if (wakeLockSentinel) {
 				await wakeLockSentinel.release();
 				wakeLockSentinel = null;
 			} else if (window.Capacitor && Capacitor.isPluginAvailable('KeepAwake')) {
 				await Capacitor.Plugins.KeepAwake.allowSleep();
 			}
+			// 2. Stop Background Audio Hack
+			stopBackgroundAudioHack();
 		}
 	}
 
@@ -546,11 +512,27 @@
 			if (group) group.style.display = 'none';
 		}
 
-		if (userState.isKeptAwake) toggleKeepAwake(true);
+		// Re-apply awake state if loaded from storage
+		if (userState.isKeptAwake) {
+			toggleKeepAwake(true); 
+		}
 
 		document.addEventListener('visibilitychange', async () => {
-			if (document.visibilityState === 'visible' && userState.isKeptAwake && !wakeLockSentinel && isWebAwakeSupported) {
-				await toggleKeepAwake(true);
+			if (document.visibilityState === 'visible') {
+				// FIX: Clear the flashing effect when the app returns to the foreground
+				dismissChime(); 
+				
+				// Re-request wake lock if needed (original logic)
+				if (userState.isKeptAwake && !wakeLockSentinel && isWebAwakeSupported) {
+					await toggleKeepAwake(true);
+				}
+				// Re-attempt background audio play in case it stopped
+				if (userState.isKeptAwake) {
+					startBackgroundAudioHack(); 
+				}
+			} else {
+				// When backgrounded, pause main chime but keep background hack running
+				// CHIME_AUDIO.pause(); // Do NOT pause the chime audio here, it stops the background loop!
 			}
 		});
 	}
@@ -603,23 +585,23 @@
 		userState.colorName = localStorage.getItem('clockColorName') || 'Lime';
 		userState.is12HourFormat = localStorage.getItem('is12HourFormat') === 'true';
 		userState.showSeconds = localStorage.getItem('showSeconds') !== 'false';
-		userState.showBattery = localStorage.getItem('showBattery') === 'true';
-		// Chime settings loaded but not used in UI
 		userState.chimeTime = localStorage.getItem('chimeTime') || '08:00';
 		userState.isChimeOn = localStorage.getItem('isChimeOn') === 'true';
 		userState.isKeptAwake = localStorage.getItem('isKeptAwake') === 'true';
 		userState.lastChimeTimestamp = parseInt(localStorage.getItem('lastChimeTimestamp')) || 0;
+		userState.isAuraOn = localStorage.getItem('isAuraOn') === 'true';
 	}
 
 	function applyInitialSettingsToUI() {
 		formatToggle.checked = userState.is12HourFormat;
 		secondsToggle.checked = userState.showSeconds;
-		batteryToggle.checked = userState.showBattery;
+		chimeTimeInput.value = userState.chimeTime;
+		chimeToggle.checked = userState.isChimeOn;
 		keepAwakeToggle.checked = userState.isKeptAwake;
+		auraToggle.checked = userState.isAuraOn;
 
 		applyStyles();
 		toggleSeconds(userState.showSeconds);
-		toggleBatteryDisplay(userState.showBattery);
 	}
 
 	function setupEventListeners() {
@@ -627,14 +609,20 @@
 		brightnessSlider.addEventListener('input', handleBrightnessChange);
 		formatToggle.addEventListener('change', (e) => toggleTimeFormat(e.target.checked));
 		secondsToggle.addEventListener('change', (e) => toggleSeconds(e.target.checked));
-		batteryToggle.addEventListener('change', (e) => toggleBatteryDisplay(e.target.checked));
+		
+		// Ensure background audio hack is started/stopped when Keep Awake is toggled
 		keepAwakeToggle.addEventListener('change', (e) => toggleKeepAwake(e.target.checked));
+		auraToggle.addEventListener('change', (e) => toggleAura(e.target.checked));
 
-		// CHIME EVENT LISTENERS REMOVED
+		chimeTimeInput.addEventListener('change', (e) => { userState.chimeTime = e.target.value; updateChimeStatus(); });
+		chimeToggle.addEventListener('change', (e) => { userState.isChimeOn = e.target.checked; updateChimeStatus(); });
 
 		document.addEventListener('mousemove', resetActivityTimer);
 		document.addEventListener('touchstart', resetActivityTimer);
 		document.addEventListener('keypress', resetActivityTimer);
+		
+		// IMPORTANT: Start the background audio hack on the very first user interaction
+		document.body.addEventListener('click', startBackgroundAudioHack, { once: true });
 	}
 
 	// --- INITIALIZATION ENTRY POINT ---
@@ -644,6 +632,10 @@
 		applyInitialSettingsToUI();
 		setupEventListeners();
 		setupKeepAwake();
+		
+		// Load audio files immediately
+		CHIME_AUDIO.load();
+		BACKGROUND_AUDIO.load();
 
 		// Start the clock loop
 		updateTime();
@@ -651,7 +643,6 @@
 
 		// Setup native features
 		setImmersiveMode();
-		setupBatteryAPI(); // Battery setup (now working instantly)
 
 		resetActivityTimer();
 	};
