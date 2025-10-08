@@ -219,26 +219,11 @@
 		}
 		.feature-title {
 			font-size: 1.125rem; font-weight: 600; color: #fff;
-			padding-bottom: 0.5rem; 
-			margin-bottom: 0.5rem; 
+			padding-bottom: 0.5rem; margin-bottom: 0.5rem;
 			border-bottom: 1px solid #374151;
-		}
-		/* TIGHTER GAP FIX */
-		.setting-card > .space-y-4 {
-			padding-top: 1rem !important; /* Reduced from pt-4 (1rem) to pt-2 (0.5rem) */
 		}
 		.setting-group {
 			margin-bottom: 1.5rem;
-		}
-		/* TIGHTER GAP FIX CONTINUED */
-		#chime-settings-header {
-			padding-bottom: 0 !important; 
-			margin-bottom: 0 !important; 
-			border-bottom: none !important;
-		}
-		/* TIGHTER GAP FIX: Also reduce space-y on the items immediately below the header */
-		.space-y-4 > .flex:first-of-type {
-			margin-top: 0.5rem !important; /* Add a small gap back if needed, or set to 0 */
 		}
 		.toggle-group {
 			border: 1px solid #374151;
@@ -312,7 +297,7 @@
 			</div>
 
 			<div class="setting-group">
-				<h3 class="feature-title">Display</h3>
+				<h3 class="feature-title">Display Options</h3>
 
 				<div class="toggle-group">
 					<label for="format-toggle" class="flex items-center justify-between p-3 cursor-pointer">
@@ -349,8 +334,8 @@
 					</label>
 					</div>
 			</div>
-			<div class="space-y-4 pt-2">
-				<h3 class="feature-title" id="chime-settings-header">Chime Settings</h3> 
+			<div class="space-y-4 pt-4">
+				<h3 class="feature-title">Chime Reminder</h3> 
 
 				<div class="flex items-center justify-between p-3 bg-gray-800 rounded-t-lg border-b border-gray-700">
 					<span class="text-white">Time</span> 
@@ -380,7 +365,7 @@
 							<option value="beep">Woosh</option>
 							<option value="melody1">Clock</option>
 							<option value="melody2">Bell</option>
-							<option value="melody3">Ancient</option>
+							<option value="melody3">Ancient3</option>
 							<option value="melody4">Flute</option>
 							<option value="melody5">Tick-tock</option>
 							<option value="melody6">Tunnel</option>
@@ -424,7 +409,7 @@
 	const CHIME_AUDIO = document.getElementById('chime-audio');
 	const BACKGROUND_AUDIO = document.getElementById('background-audio');
 
-	let wakeLockSentinel = null; // Sentinel reference for the Web Wake Lock API
+	let wakeLockSentinel = null;
 
 	// --- CONFIGURATION & STATE ---
 	const CLOCK_COLORS = {
@@ -432,14 +417,13 @@
 		'Red': '#B3645F', 'Light Grey': '#A9A9A9'
 	};
 	
-	// UPDATED: Subtle Glow Palette
 	const GLOW_PALETTE = {
-		'Lime': '#8ABF8A', 		// Subtle, lightened Lime
-		'Yellow': '#C8C29D', 	// Subtle, lightened Yellow
-		'Blue': '#8797D7', 		// Subtle, lightened Blue
-		'Red': '#D98985', 		// Subtle, lightened Red
-		'Light Grey': '#E09A96',// Subtle, slightly pinkish tone (Preferred look)
-		'Default': '#B0B0B0'	// Subtle Grey default
+		'Lime': '#96A0E0', 		
+		'Yellow': '#B9D968', 	
+		'Blue': '#F0F0F0', 		
+		'Red': '#FFD700', 		
+		'Light Grey': '#E09A96',
+		'Default': '#FFFFFF' 
 	};
 
 	let userState = {
@@ -477,15 +461,12 @@
 		if (userState.is12HourFormat) {
 			hours = hours % 12;
 			hours = hours ? hours : 12;
-			// CORRECTED: Remove leading zero for 12-hour format hours display
 			hoursDisplay.textContent = String(hours);
 		} else {
-			// CORRECTED: Remove leading zero for 24-hour format if hour is less than 10 (except for 00).
-			hoursDisplay.textContent = hours < 10 && hours !== 0
-				? String(hours)
-				: String(hours).padStart(2, '0'); // Keeps '00' as '00' but '9' as '9'
+			// LOGIC CORRECTION: Display 24-hour time with leading zero (00-23)
+			hoursDisplay.textContent = String(hours).padStart(2, '0');
 		}
-		
+
 		minutesDisplay.textContent = minutes;
 		secondsDisplay.textContent = String(seconds).padStart(2, '0');
 
@@ -534,8 +515,7 @@
 		if (userState.isAuraOn) {
 			const glowColor = GLOW_PALETTE[userState.colorName] || GLOW_PALETTE['Default']; 
 			
-			// Decreased glow spread and blur for a more subtle look
-			const shadow = `0 0 8px rgba(255, 255, 255, 0.1), 0 0 12px ${glowColor}`; 
+			const shadow = `0 0 10px rgba(255, 255, 255, 0.3), 0 0 15px ${glowColor}`; 
 			document.getElementById('time-display').style.textShadow = shadow;
 		} else {
 			document.getElementById('time-display').style.textShadow = 'none';
@@ -586,7 +566,7 @@
     		    switch(melody) {
         		case 'melody1': return 'clock.mp3';
         		case 'melody2': return 'bell.mp3';
-			case 'melody3': return 'ancient.mp3'; 
+			case 'melody3': return 'ancient3.mp3';
 			case 'melody4': return 'flute.wav';
 			case 'melody5': return 'tick-tock.wav';
 			case 'melody6': return 'tunnel.wav';
@@ -817,28 +797,17 @@
 	// --- DEVICE CONTROLS ---
 	// ==========================================
 
-	// Flag to track if the background audio is actively trying to run
-	let isBackgroundAudioActive = false; 
-
+	// This function must be tied to a user gesture (like a click) to work reliably.
 	function startBackgroundAudioHack() {
-		// Only try to start if the setting is ON AND we haven't already started
-		if (userState.isKeptAwake && !isBackgroundAudioActive) {
-			BACKGROUND_AUDIO.volume = 0.001; 
-			BACKGROUND_AUDIO.play().then(() => {
-				isBackgroundAudioActive = true;
-			}).catch(e => {
-				console.warn("Background audio hack play failed. User interaction is required for Keep Awake feature:", e);
-				isBackgroundAudioActive = false;
-			});
-		}
+		BACKGROUND_AUDIO.volume = 0.001; 
+		BACKGROUND_AUDIO.play().catch(e => {
+			console.warn("Background audio hack play failed. User interaction is required for Keep Awake feature.");
+		});
 	}
 
 	function stopBackgroundAudioHack() {
-		if (isBackgroundAudioActive) {
-			BACKGROUND_AUDIO.pause();
-			BACKGROUND_AUDIO.currentTime = 0;
-			isBackgroundAudioActive = false;
-		}
+		BACKGROUND_AUDIO.pause();
+		BACKGROUND_AUDIO.currentTime = 0;
 	}
 
 	async function toggleKeepAwake(isOn) {
@@ -846,10 +815,8 @@
 		localStorage.setItem('isKeptAwake', isOn);
 
 		if (isOn) {
-			// 1. Try to acquire Web WakeLock
 			try {
 				if ('wakeLock' in navigator) {
-					// Use try...finally to ensure the sentinel is released correctly
 					wakeLockSentinel = await navigator.wakeLock.request('screen');
 				} else if (window.Capacitor && window.Capacitor.isPluginAvailable('KeepAwake')) {
 					await window.Capacitor.Plugins.KeepAwake.keepAwake();
@@ -857,33 +824,19 @@
 					console.warn("Screen Awake API not supported.");
 				}
 			} catch (e) {
-				console.error("Keep Awake Error (WakeLock failed):", e);
+				console.error("Keep Awake Error:", e);
+				userState.isKeptAwake = false;
+				keepAwakeToggle.checked = false;
 			}
-			
-			// 2. Start the audio hack (relies on initial user click)
-			// This is now handled in the main body click event as well to ensure it starts.
-			startBackgroundAudioHack();
+			// LOGIC CORRECTION: Removed redundant call to startBackgroundAudioHack here,
+			// it should rely on the explicit user click in setupEventListeners.
 		} else {
-			// **CRITICAL FIX: RELIABLY RELEASE THE WAKE LOCKS**
-			
-			// 1. Release Web WakeLock
-			try {
-				if (wakeLockSentinel) {
-					await wakeLockSentinel.release();
-				}
-			} catch(e) {
-				console.warn("Error releasing WakeLockSentinel:", e);
-			} finally {
-				// Ensure the sentinel variable is cleared even if release failed or was not needed
+			if (wakeLockSentinel) {
+				await wakeLockSentinel.release();
 				wakeLockSentinel = null;
-			}
-			
-			// 2. Release Capacitor lock
-			if (window.Capacitor && window.Capacitor.isPluginAvailable('KeepAwake')) {
+			} else if (window.Capacitor && window.Capacitor.isPluginAvailable('KeepAwake')) {
 				await window.Capacitor.Plugins.KeepAwake.allowSleep();
 			}
-			
-			// 3. Stop the audio hack
 			stopBackgroundAudioHack();
 		}
 	}
@@ -891,8 +844,9 @@
 	function setupKeepAwake() {
 		const isWebAwakeSupported = 'wakeLock' in navigator;
 
-		// Only attempt to acquire lock if the feature was enabled previously
 		if (userState.isKeptAwake) {
+			// This attempts to acquire the wakelock on load from a previous session
+			// and handles fallback, but it might fail without a user gesture.
 			toggleKeepAwake(true); 
 		}
 
@@ -900,16 +854,13 @@
 			if (document.visibilityState === 'visible') {
 				dismissChime(); 
 				
+				if (userState.isKeptAwake && !wakeLockSentinel && isWebAwakeSupported) {
+					// Re-request the web wakelock if we regain visibility
+					await toggleKeepAwake(true);
+				}
 				if (userState.isKeptAwake) {
-					// Re-request the web wakelock if we regain visibility and the feature is on
-					if (!wakeLockSentinel && isWebAwakeSupported) {
-						await toggleKeepAwake(true);
-					}
-					// Restart background audio hack if visibility changes and the feature is on
+					// Restart background audio hack if visibility changes
 					startBackgroundAudioHack(); 
-				} else {
-					// If the user has the toggle off, ensure everything is definitely released
-					toggleKeepAwake(false);
 				}
 			}
 		});
@@ -1070,15 +1021,12 @@
 		document.addEventListener('touchstart', resetActivityTimer);
 		document.addEventListener('keypress', resetActivityTimer);
 		
-		// Mandatory user interaction to enable media features
+		// LOGIC CORRECTION: Use the mandatory user interaction to attempt starting both the
+		// background audio hack AND the official Keep Awake API if the toggle is set.
 		document.body.addEventListener('click', async () => {
-			// Only attempt to start background audio hack if the toggle is set
-			if (userState.isKeptAwake) {
-				startBackgroundAudioHack();
-				if ('wakeLock' in navigator && !wakeLockSentinel) {
-					// Re-acquire the web wake lock on first user click if it wasn't acquired on load
-					await toggleKeepAwake(true);
-				}
+			startBackgroundAudioHack();
+			if (userState.isKeptAwake && 'wakeLock' in navigator && !wakeLockSentinel) {
+				await toggleKeepAwake(true);
 			}
 		}, { once: true });
 	}
@@ -1098,6 +1046,9 @@
 
 		// The function that runs the full-screen commands
 		setImmersiveMode(); 
+
+		// LOGIC CORRECTION: Removed the initial call to resetActivityTimer() to prevent the gear icon from flashing on load.
+		// The button now starts visible (opacity-100 via HTML class) and will only start fading after the first user interaction.
 	};
 </script>
 </body>

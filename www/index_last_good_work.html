@@ -13,14 +13,14 @@
 
 		/* AGGRESSIVE FULL-SCREEN BLACK FIX */
 		html, body {
-			margin: 0; 
-			padding: 0; 
+			margin: 0; 
+			padding: 0; 
 			border: 0;
 			/* FORCED BLACK BACKGROUND */
-			background-color: #000000 !important; 
+			background-color: #000000 !important; 
 			color: #fff;
 			overflow: hidden;
-			height: 100%; 
+			height: 100%; 
 			width: 100%;
 		}
 		
@@ -44,7 +44,7 @@
 
 		#time-display {
 			/* Adjusted CLAMP: Reduced max size to 10rem to prevent overflow when system bars are visible */
-			font-size: clamp(3rem, 15vw, 10rem); 
+			font-size: clamp(3rem, 15vw, 10rem); 
 			font-weight: 400; line-height: 1; letter-spacing: -0.05em;
 			color: var(--clock-color, #618D61);
 			transition: color 0.3s ease, text-shadow 0.3s ease;
@@ -68,15 +68,15 @@
 		#settings-button {
 			position: absolute; top: 2rem; right: 1rem;
 			transition: opacity 0.5s ease-out;
-			cursor: pointer; 
-			z-index: 60; 
+			cursor: pointer; 
+			z-index: 60; 
 		}
 
 		/* The main overlay element */
 		#settings-overlay {
 			position: fixed; top: 0; left: 0; right: 0; bottom: 0;
 			background-color: rgba(0, 0, 0, 0.85);
-			z-index: 40; 
+			z-index: 40; 
 		}
 
 		/* The panel wrapper that positions the card */
@@ -112,22 +112,22 @@
 		
 		/* Time Input */
 		#chime-time-input {
-			width: 130px; 
+			width: 130px; 
 			text-align: center;
 		}
 		
 		/* Melody Dropdown */
 		#melody-select {
-			width: 130px; 
+			width: 130px; 
 			text-align: center;
-			-webkit-appearance: none; 
-			-moz-appearance: none;    
-			appearance: none;         
+			-webkit-appearance: none; 
+			-moz-appearance: none;    
+			appearance: none;         
 			background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%20viewBox%3D%220%200%20292.4%20292.4%22%3E%3Cpath%20fill%3D%22white%22%20d%3D%22M287%20197.3l-133.4-133.4c-4.8-4.8-12.5-4.8-17.3%200L5.3%20197.3c-4.8%204.8-4.8%2012.5%200%2017.3s12.5%204.8%2017.3%200l118.4-118.4%20118.4%20118.4c4.8%204.8%2012.5%204.8%2017.3%200s4.8-12.5%200-17.3z%22%2F%3E%3C%2Fsvg%3E');
 			background-repeat: no-repeat;
 			background-position: right 8px center;
 			background-size: 10px;
-			padding-right: 25px; 
+			padding-right: 25px; 
 		}
 		
 		/* Timer Selectors Wrapper */
@@ -135,50 +135,50 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			width: 130px; 
-			padding: 0; 
+			width: 130px; 
+			padding: 0; 
 			border: none;
 		}
 		
 		/* Timer Select Elements */
 		#timer-minutes-select, #timer-seconds-select {
-			background-color: #333; 
-			color: #fff; 
-			border: 1px solid #444; 
+			background-color: #333; 
+			color: #fff; 
+			border: 1px solid #444; 
 			font-size: 1rem;
 			font-family: 'Inter', sans-serif;
 			height: 40px;
-			padding: 0 4px; 
+			padding: 0 4px; 
 			
 			-webkit-appearance: none;
-			-moz-appearance: none;    
-			appearance: none;         
+			-moz-appearance: none;    
+			appearance: none;         
 			background-repeat: no-repeat;
 			background-position: right 8px center;
-			background-size: 8px; 
+			background-size: 8px; 
 			text-align: center;
 		}
 
 		#timer-minutes-select {
-			width: 65px; 
+			width: 65px; 
 			border-right: none;
 			border-radius: 6px 0 0 6px;
 			padding-right: 20px;
 		}
 		#timer-seconds-select {
-			width: 65px; 
+			width: 65px; 
 			border-radius: 0 6px 6px 0;
 			padding-right: 20px;
 		}
 		
 		/* Colon separator between minute/second selectors */
 		#timer-select-wrapper > span {
-			position: absolute; 
+			position: absolute; 
 			z-index: 10;
-			pointer-events: none; 
-			color: #fff; 
+			pointer-events: none; 
+			color: #fff; 
 			background-color: #333;
-			height: 40px; 
+			height: 40px; 
 			display: flex;
 			align-items: center;
 			font-size: 1.25rem;
@@ -187,13 +187,13 @@
 
 		/* Start/Stop button size */
 		#timer-start-stop-button {
-			width: 60px; 
-			height: 38px; 
+			width: 60px; 
+			height: 38px; 
 			font-weight: bold;
 			border-radius: 0.375rem;
 			transition: background-color 0.2s, transform 0.1s;
-			padding: 0; 
-			font-size: 0.875rem; 
+			padding: 0; 
+			font-size: 0.875rem; 
 		}
 		.start-state {
 			background-color: #22c55e;
@@ -219,26 +219,11 @@
 		}
 		.feature-title {
 			font-size: 1.125rem; font-weight: 600; color: #fff;
-			padding-bottom: 0.5rem; 
-			margin-bottom: 0.5rem; 
+			padding-bottom: 0.5rem; margin-bottom: 0.5rem;
 			border-bottom: 1px solid #374151;
-		}
-		/* TIGHTER GAP FIX */
-		.setting-card > .space-y-4 {
-			padding-top: 1rem !important; /* Reduced from pt-4 (1rem) to pt-2 (0.5rem) */
 		}
 		.setting-group {
 			margin-bottom: 1.5rem;
-		}
-		/* TIGHTER GAP FIX CONTINUED */
-		#chime-settings-header {
-			padding-bottom: 0 !important; 
-			margin-bottom: 0 !important; 
-			border-bottom: none !important;
-		}
-		/* TIGHTER GAP FIX: Also reduce space-y on the items immediately below the header */
-		.space-y-4 > .flex:first-of-type {
-			margin-top: 0.5rem !important; /* Add a small gap back if needed, or set to 0 */
 		}
 		.toggle-group {
 			border: 1px solid #374151;
@@ -281,7 +266,7 @@
 </div>
 
 
-<button id="settings-button" class="opacity-100 w-12 h-12 flex items-center justify-center bg-gray-900 bg-opacity-50 text-white rounded-full shadow-lg hover:bg-opacity-70 transition-all duration-300">
+<button id="settings-button" class="opacity-0 w-12 h-12 flex items-center justify-center bg-gray-900 bg-opacity-50 text-white rounded-full shadow-lg hover:bg-opacity-70 transition-all duration-300">
 	<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings">
 		<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2.72l-.15.1a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1 0-2.71l.15-.11a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
 		<circle cx="12" cy="12" r="3"/>
@@ -312,7 +297,7 @@
 			</div>
 
 			<div class="setting-group">
-				<h3 class="feature-title">Display</h3>
+				<h3 class="feature-title">Display Options</h3>
 
 				<div class="toggle-group">
 					<label for="format-toggle" class="flex items-center justify-between p-3 cursor-pointer">
@@ -349,12 +334,12 @@
 					</label>
 					</div>
 			</div>
-			<div class="space-y-4 pt-2">
-				<h3 class="feature-title" id="chime-settings-header">Chime Settings</h3> 
+			<div class="space-y-4 pt-4">
+				<h3 class="feature-title">Chime Reminder</h3> 
 
 				<div class="flex items-center justify-between p-3 bg-gray-800 rounded-t-lg border-b border-gray-700">
-					<span class="text-white">Time</span> 
-					<div class="flex items-center space-x-4 gap-2"> 
+					<span class="text-white">Time</span> 
+					<div class="flex items-center space-x-4 gap-2"> 
 						<input type="time" id="chime-time-input" value="08:00" class="aligned-input">
 						<label for="chime-toggle" class="relative inline-flex items-center cursor-pointer">
 							<input type="checkbox" id="chime-toggle" class="sr-only peer">
@@ -363,8 +348,8 @@
 					</div>
 				</div>
 				<div class="flex items-center justify-between p-3 bg-gray-800 border-b border-gray-700">
-					<span class="text-white">Timer</span> 
-					<div class="flex items-center space-x-4 gap-2"> 
+					<span class="text-white">Timer</span> 
+					<div class="flex items-center space-x-4 gap-2"> 
 						<div id="timer-select-wrapper" class="aligned-input">
 							<select id="timer-minutes-select" onchange="updateTimerDuration()" class="focus:border-blue-500"></select>
 							<span class="text-lg px-1 pointer-events-none">:</span>
@@ -374,18 +359,15 @@
 					</div>
 				</div>
 				<div class="flex items-center justify-between p-3 bg-gray-800 rounded-b-lg">
-					<span class="text-white">Melody</span> 
-					<div class="flex items-center space-x-4 gap-2"> 
+					<span class="text-white">Melody</span> 
+					<div class="flex items-center space-x-4 gap-2"> 
 						<select id="melody-select" class="aligned-input">
-							<option value="beep">Woosh</option>
-							<option value="melody1">Clock</option>
-							<option value="melody2">Bell</option>
-							<option value="melody3">Ancient</option>
-							<option value="melody4">Flute</option>
-							<option value="melody5">Tick-tock</option>
-							<option value="melody6">Tunnel</option>
+							<option value="beep">Chime (Default)</option>
+							<option value="melody1">Melody 1</option>
+							<option value="melody2">Melody 2</option>
+							<option value="digital">Digital Beep</option>
 						</select>
-						<div class="w-[60px] h-[38px]"></div> 
+						<div class="w-[60px] h-[38px]"></div> 
 					</div>
 				</div>
 				</div>
@@ -405,7 +387,7 @@
 	const secondsDisplay = document.getElementById('seconds');
 	const settingsButton = document.getElementById('settings-button');
 	const settingsOverlay = document.getElementById('settings-overlay');
-	const settingsPanel = document.getElementById('settings-panel'); 
+	const settingsPanel = document.getElementById('settings-panel'); 
 	const brightnessSlider = document.getElementById('brightness-slider');
 	const colorSelector = document.getElementById('color-selector');
 	const secondsToggle = document.getElementById('seconds-toggle');
@@ -417,14 +399,14 @@
 	// Timer elements
 	const timerMinutesSelect = document.getElementById('timer-minutes-select');
 	const timerSecondsSelect = document.getElementById('timer-seconds-select');
-	const timerStartStopButton = document.getElementById('timer-start-stop-button'); 
+	const timerStartStopButton = document.getElementById('timer-start-stop-button'); 
 	// Melody element
 	const melodySelect = document.getElementById('melody-select');
 	
 	const CHIME_AUDIO = document.getElementById('chime-audio');
 	const BACKGROUND_AUDIO = document.getElementById('background-audio');
 
-	let wakeLockSentinel = null; // Sentinel reference for the Web Wake Lock API
+	let wakeLockSentinel = null;
 
 	// --- CONFIGURATION & STATE ---
 	const CLOCK_COLORS = {
@@ -432,14 +414,13 @@
 		'Red': '#B3645F', 'Light Grey': '#A9A9A9'
 	};
 	
-	// UPDATED: Subtle Glow Palette
 	const GLOW_PALETTE = {
-		'Lime': '#8ABF8A', 		// Subtle, lightened Lime
-		'Yellow': '#C8C29D', 	// Subtle, lightened Yellow
-		'Blue': '#8797D7', 		// Subtle, lightened Blue
-		'Red': '#D98985', 		// Subtle, lightened Red
-		'Light Grey': '#E09A96',// Subtle, slightly pinkish tone (Preferred look)
-		'Default': '#B0B0B0'	// Subtle Grey default
+		'Lime': '#96A0E0', 		
+		'Yellow': '#B9D968', 	
+		'Blue': '#F0F0F0', 		
+		'Red': '#FFD700', 		
+		'Light Grey': '#E09A96',
+		'Default': '#FFFFFF' 
 	};
 
 	let userState = {
@@ -450,9 +431,9 @@
 		// Timer State
 		timerMinutes: 5, 		 // The stored *duration* minutes
 		timerSeconds: 0, 		 // The stored *duration* seconds
-		isTimerRunning: false, 
+		isTimerRunning: false, 
 		timerTimeRemaining: 300, // Total seconds left in the countdown (5 minutes default)
-		currentMelody: 'beep' 
+		currentMelody: 'beep' 
 	};
 	
 	// --- INTERVALS ---
@@ -460,7 +441,7 @@
 	let isPanelOpen = false;
 	let chimeTriggered = false;
 	let flashTimeoutId = null;
-	let timerInterval = null; 
+	let timerInterval = null; 
 
 	// ==========================================
 	// --- CLOCK & DISPLAY LOGIC ---
@@ -477,15 +458,11 @@
 		if (userState.is12HourFormat) {
 			hours = hours % 12;
 			hours = hours ? hours : 12;
-			// CORRECTED: Remove leading zero for 12-hour format hours display
 			hoursDisplay.textContent = String(hours);
 		} else {
-			// CORRECTED: Remove leading zero for 24-hour format if hour is less than 10 (except for 00).
-			hoursDisplay.textContent = hours < 10 && hours !== 0
-				? String(hours)
-				: String(hours).padStart(2, '0'); // Keeps '00' as '00' but '9' as '9'
+			hoursDisplay.textContent = String(hours).padStart(2, '0').replace(/^0/, '');
 		}
-		
+
 		minutesDisplay.textContent = minutes;
 		secondsDisplay.textContent = String(seconds).padStart(2, '0');
 
@@ -532,10 +509,9 @@
 		document.documentElement.style.setProperty('--clock-color', colorValue);
 
 		if (userState.isAuraOn) {
-			const glowColor = GLOW_PALETTE[userState.colorName] || GLOW_PALETTE['Default']; 
+			const glowColor = GLOW_PALETTE[userState.colorName] || GLOW_PALETTE['Default']; 
 			
-			// Decreased glow spread and blur for a more subtle look
-			const shadow = `0 0 8px rgba(255, 255, 255, 0.1), 0 0 12px ${glowColor}`; 
+			const shadow = `0 0 10px rgba(255, 255, 255, 0.3), 0 0 15px ${glowColor}`; 
 			document.getElementById('time-display').style.textShadow = shadow;
 		} else {
 			document.getElementById('time-display').style.textShadow = 'none';
@@ -554,7 +530,7 @@
 	function handleColorChange(name) {
 		userState.colorName = name;
 		localStorage.setItem('clockColorName', name);
-		applyStyles(); 
+		applyStyles(); 
 	}
 
 	function handleBrightnessChange(event) {
@@ -583,16 +559,8 @@
 	// ==========================================
 	
 	function getMelodyFile(melody) {
-    		    switch(melody) {
-        		case 'melody1': return 'clock.mp3';
-        		case 'melody2': return 'bell.mp3';
-			case 'melody3': return 'ancient.mp3'; 
-			case 'melody4': return 'flute.wav';
-			case 'melody5': return 'tick-tock.wav';
-			case 'melody6': return 'tunnel.wav';
-        		case 'beep':
-        	default: return 'beep.wav';
-    		}
+		// TEMPORARY FIX: Always return 'beep.wav' until other files are added.
+		return 'beep.wav'; 
 	}
 
 	function checkChime(now, hours24, minutes, seconds) {
@@ -602,13 +570,13 @@
 		const chimeMinute = userState.chimeTime.substring(3, 5);
 
 		const currentHourString = String(hours24).padStart(2, '0');
-		const currentMinuteString = minutes; 
+		const currentMinuteString = minutes; 
 
 		if (currentHourString === chimeHour && currentMinuteString === chimeMinute) {
 			if (seconds >= 0 && seconds <= 1 && !chimeTriggered) {
 				triggerChime(now);
 				chimeTriggered = true;
-				setTimeout(() => { chimeTriggered = false; }, 60000); 
+				setTimeout(() => { chimeTriggered = false; }, 60000); 
 			}
 		} else {
 			if (chimeTriggered) {
@@ -623,14 +591,14 @@
 		
 		CHIME_AUDIO.src = getMelodyFile(userState.currentMelody);
 		CHIME_AUDIO.volume = 0.2;
-		CHIME_AUDIO.currentTime = 0; 
+		CHIME_AUDIO.currentTime = 0; 
 		CHIME_AUDIO.play().catch(e => {
 			console.warn("Chime Audio Playback failed (Interaction may be required):", e);
 		});
 
 		clockContainer.classList.add('alarm-flashing');
 		document.addEventListener('click', dismissChime, { once: true });
-		flashTimeoutId = setTimeout(dismissChime, 30000); 
+		flashTimeoutId = setTimeout(dismissChime, 30000); 
 	}
 	
 	function triggerTimerEnd() {
@@ -712,7 +680,7 @@
 
 	function updateTimerDisplay() {
 		// Calculate Minutes and Seconds for display
-		const totalSeconds = userState.isTimerRunning 
+		const totalSeconds = userState.isTimerRunning 
 			? userState.timerTimeRemaining
 			: (userState.timerMinutes * 60) + userState.timerSeconds;
 
@@ -731,7 +699,7 @@
 			timerMinutesSelect.disabled = true;
 			timerSecondsSelect.disabled = true;
 		} else {
-			timerStartStopButton.textContent = 'Start'; 
+			timerStartStopButton.textContent = 'Start'; 
 			timerStartStopButton.classList.remove('stop-state');
 			timerStartStopButton.classList.add('start-state');
 			// Re-enable input only if the settings panel is open
@@ -757,7 +725,7 @@
 		localStorage.setItem('timerTimeRemaining', userState.timerTimeRemaining);
 		
 		// Update the UI every second to show the countdown
-		updateTimerDisplay(); 
+		updateTimerDisplay(); 
 	}
 	
 	function startTimer() {
@@ -796,7 +764,7 @@
 		localStorage.setItem('timerTimeRemaining', userState.timerTimeRemaining);
 		
 		// Update UI to show the duration and the 'Start' button
-		updateTimerDisplay(); 
+		updateTimerDisplay(); 
 	}
 	
 	function handleTimerButton(event) {
@@ -817,28 +785,17 @@
 	// --- DEVICE CONTROLS ---
 	// ==========================================
 
-	// Flag to track if the background audio is actively trying to run
-	let isBackgroundAudioActive = false; 
-
+	// This function must be tied to a user gesture (like a click) to work reliably.
 	function startBackgroundAudioHack() {
-		// Only try to start if the setting is ON AND we haven't already started
-		if (userState.isKeptAwake && !isBackgroundAudioActive) {
-			BACKGROUND_AUDIO.volume = 0.001; 
-			BACKGROUND_AUDIO.play().then(() => {
-				isBackgroundAudioActive = true;
-			}).catch(e => {
-				console.warn("Background audio hack play failed. User interaction is required for Keep Awake feature:", e);
-				isBackgroundAudioActive = false;
-			});
-		}
+		BACKGROUND_AUDIO.volume = 0.001; 
+		BACKGROUND_AUDIO.play().catch(e => {
+			console.warn("Background audio hack play failed. User interaction is required for Keep Awake feature.");
+		});
 	}
 
 	function stopBackgroundAudioHack() {
-		if (isBackgroundAudioActive) {
-			BACKGROUND_AUDIO.pause();
-			BACKGROUND_AUDIO.currentTime = 0;
-			isBackgroundAudioActive = false;
-		}
+		BACKGROUND_AUDIO.pause();
+		BACKGROUND_AUDIO.currentTime = 0;
 	}
 
 	async function toggleKeepAwake(isOn) {
@@ -846,10 +803,8 @@
 		localStorage.setItem('isKeptAwake', isOn);
 
 		if (isOn) {
-			// 1. Try to acquire Web WakeLock
 			try {
 				if ('wakeLock' in navigator) {
-					// Use try...finally to ensure the sentinel is released correctly
 					wakeLockSentinel = await navigator.wakeLock.request('screen');
 				} else if (window.Capacitor && window.Capacitor.isPluginAvailable('KeepAwake')) {
 					await window.Capacitor.Plugins.KeepAwake.keepAwake();
@@ -857,33 +812,19 @@
 					console.warn("Screen Awake API not supported.");
 				}
 			} catch (e) {
-				console.error("Keep Awake Error (WakeLock failed):", e);
+				console.error("Keep Awake Error:", e);
+				userState.isKeptAwake = false;
+				keepAwakeToggle.checked = false;
 			}
-			
-			// 2. Start the audio hack (relies on initial user click)
-			// This is now handled in the main body click event as well to ensure it starts.
-			startBackgroundAudioHack();
+			// Attempt to start hack here, but rely on the body click for initial trigger
+			startBackgroundAudioHack(); 
 		} else {
-			// **CRITICAL FIX: RELIABLY RELEASE THE WAKE LOCKS**
-			
-			// 1. Release Web WakeLock
-			try {
-				if (wakeLockSentinel) {
-					await wakeLockSentinel.release();
-				}
-			} catch(e) {
-				console.warn("Error releasing WakeLockSentinel:", e);
-			} finally {
-				// Ensure the sentinel variable is cleared even if release failed or was not needed
+			if (wakeLockSentinel) {
+				await wakeLockSentinel.release();
 				wakeLockSentinel = null;
-			}
-			
-			// 2. Release Capacitor lock
-			if (window.Capacitor && window.Capacitor.isPluginAvailable('KeepAwake')) {
+			} else if (window.Capacitor && window.Capacitor.isPluginAvailable('KeepAwake')) {
 				await window.Capacitor.Plugins.KeepAwake.allowSleep();
 			}
-			
-			// 3. Stop the audio hack
 			stopBackgroundAudioHack();
 		}
 	}
@@ -891,25 +832,19 @@
 	function setupKeepAwake() {
 		const isWebAwakeSupported = 'wakeLock' in navigator;
 
-		// Only attempt to acquire lock if the feature was enabled previously
 		if (userState.isKeptAwake) {
-			toggleKeepAwake(true); 
+			toggleKeepAwake(true); 
 		}
 
 		document.addEventListener('visibilitychange', async () => {
 			if (document.visibilityState === 'visible') {
-				dismissChime(); 
+				dismissChime(); 
 				
+				if (userState.isKeptAwake && !wakeLockSentinel && isWebAwakeSupported) {
+					await toggleKeepAwake(true);
+				}
 				if (userState.isKeptAwake) {
-					// Re-request the web wakelock if we regain visibility and the feature is on
-					if (!wakeLockSentinel && isWebAwakeSupported) {
-						await toggleKeepAwake(true);
-					}
-					// Restart background audio hack if visibility changes and the feature is on
-					startBackgroundAudioHack(); 
-				} else {
-					// If the user has the toggle off, ensure everything is definitely released
-					toggleKeepAwake(false);
+					startBackgroundAudioHack(); 
 				}
 			}
 		});
@@ -922,7 +857,7 @@
 			
 			// Attempt to hide and force black status bar (top bar)
 			try {
-				await StatusBar.hide(); 
+				await StatusBar.hide(); 
 				await StatusBar.setStyle({ style: 'DARK' });
 				await StatusBar.setBackgroundColor({ color: '#000000' });
 			} catch (e) {
@@ -931,7 +866,7 @@
 			
 			// Attempt to hide and force black navigation bar (bottom bar on Android)
 			try {
-				await NavigationBar.hide(); 
+				await NavigationBar.hide(); 
 				await NavigationBar.setTransparency({ isTransparent: false });
 				await NavigationBar.setColor({ color: '#000000' });
 			} catch (e) {
@@ -945,7 +880,7 @@
 	
 	function toggleSettingsPanel(show) {
 		if (typeof show === 'undefined') {
-			show = !isPanelOpen; 
+			show = !isPanelOpen; 
 		}
 		
 		isPanelOpen = show;
@@ -959,7 +894,7 @@
 			}
 			clearTimeout(activityTimeout);
 			// Hide the external gear button when the panel is open
-			settingsButton.style.display = 'none'; 
+			settingsButton.style.display = 'none'; 
 		} else {
 			// When closing, re-enable input if the timer is stopped
 			if (!userState.isTimerRunning) {
@@ -975,7 +910,6 @@
 	function resetActivityTimer() {
 		if (isPanelOpen) return;
 		
-		// If the button is currently hidden, show it now
 		settingsButton.classList.remove('opacity-0');
 		settingsButton.classList.add('opacity-100');
 
@@ -1029,7 +963,7 @@
 		auraToggle.checked = userState.isAuraOn;
 		
 		// 1. Populate selectors first
-		populateTimerSelectors(); 
+		populateTimerSelectors(); 
 		
 		// 2. Set the melody value
 		melodySelect.value = userState.currentMelody;
@@ -1042,16 +976,16 @@
 		// 4. Handle persistent timer state (Display must be called first)
 		if (userState.isTimerRunning) {
 			// If timer was running, display the remaining time and restart the interval
-			updateTimerDisplay(); 
+			updateTimerDisplay(); 
 			startTimer();
 		} else {
 			// If stopped, display the stored duration
-			updateTimerDisplay(); 
+			updateTimerDisplay(); 
 		}
 	}
 
 	function setupEventListeners() {
-		settingsButton.addEventListener('click', () => toggleSettingsPanel(true)); 
+		settingsButton.addEventListener('click', () => toggleSettingsPanel(true)); 
 		brightnessSlider.addEventListener('input', handleBrightnessChange);
 		
 		// Chime Listeners
@@ -1059,7 +993,7 @@
 		chimeToggle.addEventListener('change', (e) => { userState.isChimeOn = e.target.checked; updateChimeStatus(); });
 		
 		// Timer Listeners (Handle Start/Stop Button and Duration change)
-		timerStartStopButton.addEventListener('click', handleTimerButton); 
+		timerStartStopButton.addEventListener('click', handleTimerButton); 
 		timerMinutesSelect.addEventListener('change', updateTimerDuration);
 		timerSecondsSelect.addEventListener('change', updateTimerDuration);
 		
@@ -1070,16 +1004,9 @@
 		document.addEventListener('touchstart', resetActivityTimer);
 		document.addEventListener('keypress', resetActivityTimer);
 		
-		// Mandatory user interaction to enable media features
-		document.body.addEventListener('click', async () => {
-			// Only attempt to start background audio hack if the toggle is set
-			if (userState.isKeptAwake) {
-				startBackgroundAudioHack();
-				if ('wakeLock' in navigator && !wakeLockSentinel) {
-					// Re-acquire the web wake lock on first user click if it wasn't acquired on load
-					await toggleKeepAwake(true);
-				}
-			}
+		// Mandatory user interaction to enable background audio and alarm audio
+		document.body.addEventListener('click', () => {
+			startBackgroundAudioHack();
 		}, { once: true });
 	}
 
@@ -1097,7 +1024,9 @@
 		setInterval(updateTime, 1000);
 
 		// The function that runs the full-screen commands
-		setImmersiveMode(); 
+		setImmersiveMode(); 
+
+		resetActivityTimer();
 	};
 </script>
 </body>
