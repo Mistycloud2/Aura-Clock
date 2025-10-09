@@ -384,6 +384,7 @@
 							<option value="melody4">Flute</option>
 							<option value="melody5">Tick-tock</option>
 							<option value="melody6">Tunnel</option>
+							<option value="melody7">Gong</option>
 						</select>
 						<div class="w-[60px] h-[38px]"></div> 
 					</div>
@@ -480,10 +481,10 @@
 			// CORRECTED: Remove leading zero for 12-hour format hours display
 			hoursDisplay.textContent = String(hours);
 		} else {
-			// CORRECTED: Remove leading zero for 24-hour format if hour is less than 10 (except for 00).
-			hoursDisplay.textContent = hours < 10 && hours !== 0
+			// CORRECTED: Remove leading zero for 24-hour format if hour is less than 10.
+			hoursDisplay.textContent = hours < 10 
 				? String(hours)
-				: String(hours).padStart(2, '0'); // Keeps '00' as '00' but '9' as '9'
+				: String(hours);
 		}
 		
 		minutesDisplay.textContent = minutes;
@@ -594,6 +595,7 @@
 			case 'melody4': return 'flute.wav';
 			case 'melody5': return 'tick-tock.wav';
 			case 'melody6': return 'tunnel.wav';
+			case 'melody7': return 'gong.mp3';
         		case 'beep':
         	default: return 'beep.wav';
     		}
