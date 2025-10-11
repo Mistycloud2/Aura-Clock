@@ -1,0 +1,22 @@
+tSvPZJ7wn9hzKY
+
+Key store path D:\Android_Keys\Aura_Clock_Android_Studio
+
+Key store password tSvPZJ7wn9hzKY
+
+Key alias Aura_Clock
+
+Key password tSvPZJ7wn9hzKY
+
+1.	Privacy policy Aura Clock
+
+https://github.com/Mistycloud2/Aura-Clock
+
+https://raw.githubusercontent.com/Mistycloud2/Aura-Clock/refs/heads/master/privacy_policy.html
+
+https://gist.github.com/Mistycloud2/ac6b8a9655071cf487c09292177468ef
+
+
+2. Short Description (80 Character Limit)
+
+Simple, pleasant, dimmable clock with soothing aura glow and chime. No Ads! 🚫

@@ -1,66 +1,18 @@
-Privacy Policy for Aura Clock
-
-Aura Clock is a static, time-display application designed solely for use as a bedside or full-screen clock.
+1. **Privacy policy Aura Clock**
 
 
 
-1\. Information Collection and Use
-
-Aura Clock does not collect, transmit, or store any personal data. The app is designed to run entirely locally on your device.
+https://github.com/Mistycloud2/Aura-Clock
 
 
 
-No Personal Information is Collected: We do not collect names, email addresses, location, device IDs, or any other identifying information.
+https://raw.githubusercontent.com/Mistycloud2/Aura-Clock/refs/heads/master/privacy\_policy.html
 
 
 
-No Third-Party Services: We do not use third-party analytics, advertising, or data collection services.
+https://gist.github.com/Mistycloud2/ac6b8a9655071cf487c09292177468ef
 
 
-
-2\. Local Data Storage (Preferences)
-
-Aura Clock uses your device's local storage (browser/WebView storage, such as localStorage or equivalent Capacitor preference storage) to save user preferences, ensuring your settings are retained between sessions. This data includes:
-
-
-
-Clock color selection.
-
-
-
-Brightness level.
-
-
-
-Time format (12/24 hour).
-
-
-
-Toggle states (Show Seconds, Aura Effect, Keep Screen Awake, Chime On/Off).
-
-
-
-Chime time setting and selected melody.
-
-
-
-Timer duration and last known remaining time.
-
-
-
-This preference data never leaves your device and is only used to manage the app's appearance and functionality.
-
-
-
-3\. Changes to This Privacy Policy
-
-We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.
-
-
-
-4\. Contact Us
-
-If you have any questions about this Privacy Policy, please contact us at: \[YOUR SUPPORT EMAIL ADDRESS]
 
 
 
@@ -70,7 +22,7 @@ The Short Description is the most critical text; it sells the app in one sentenc
 
 
 
-**Simple, easy for eyes dimmable clock with soothing aura glow and chime.**
+**Simple, pleasant, dimmable clock with soothing aura glow and chime. No Ads! 🚫**
 
 
 
@@ -80,7 +32,7 @@ The Long Description details features and encourages download. We'll focus on th
 
 
 
-Aura Clock: The Beautifully Minimal Bedside Companion
+Aura Clock: The Beautifully Minimal Bedside or Desktop Companion
 
 Aura Clock is a stunningly simple and minimal digital clock designed to transform your device into an elegant, full-screen timepiece. Perfect for nightstands, desks, or any dedicated display, Aura Clock puts beautiful, legible time first.
 
@@ -102,7 +54,7 @@ Adjustable Brightness: Precisely control the screen brightness to prevent disrup
 
 
 
-Color Themes: Choose from five curated color palettes (Lime, Blue, Yellow, Red, Light Grey) to match your mood or decor.
+Color Themes: Choose from five easy for eyes curated color palettes (Lime, Blue, Yellow, Red, Light Grey) to match your mood or decor.
 
 
 
@@ -122,7 +74,7 @@ Countdown Timer: Use the built-in timer for focus sessions, cooking, or short re
 
 
 
-Multiple Melodies: Select from a variety of pleasant tones and sounds (Woosh, Clock, Bell, Ancient, Flute, Tick-tock, Tunnel) for your chimes and timers.
+Multiple Melodies: Select from a variety of pleasant short tones and sounds (Gong, Woosh, Clock, Bell, Ancient, Flute, Tick-tock, Tunnel) for your chimes and timers.
 
 
 
