@@ -57,8 +57,6 @@
 
 		#colon-separator {
 			padding-right: 0.1em;
-			/* Main Clock Colon: Keep it visible by default, but let JS handle blinking if seconds are off. */
-			visibility: visible !important;
 		}
 
 		#seconds {
@@ -112,6 +110,12 @@
 			box-sizing: border-box;
 		}
 		
+		/* Time Input (OLD/Unused but kept the ID just in case) */
+		#chime-time-input {
+			width: 130px; 
+			text-align: center;
+		}
+
 		/* Melody Dropdown */
 		#melody-select {
 			width: 130px; 
@@ -126,7 +130,7 @@
 			padding-right: 25px; 
 		}
 		
-		/* --- CHIME SELECTOR STYLES (Existing working code) --- */
+		/* --- CHIME SELECTOR STYLES (MATCHING TIMER) --- */
 		
 		/* Chime Selectors Wrapper */
 		#chime-select-wrapper {
@@ -136,7 +140,6 @@
 			width: 130px; 
 			padding: 0; 
 			border: none;
-			background-color: #333; 
 		}
 		
 		/* Chime Select Elements */
@@ -156,45 +159,38 @@
 			background-position: right 8px center;
 			background-size: 8px; 
 			text-align: center;
-			box-sizing: border-box;
 		}
 		
 		/* Chime Hours Select - Left side */
 		#chime-hours-select {
-			width: 50%; 
+			width: 65px; 
 			border-right: none;
 			border-radius: 6px 0 0 6px;
 			padding-right: 20px;
 		}
 		/* Chime Minutes Select - Right side */
 		#chime-minutes-select {
-			width: 50%; 
-			border-left: none;
+			width: 65px; 
 			border-radius: 0 6px 6px 0;
-			padding-left: 20px;
+			padding-right: 20px;
 		}
 		
 		/* Colon separator between hours/minute selectors */
 		#chime-select-wrapper > span {
-			color: #fff;
-			font-size: 1.25rem;
-			line-height: 1;
+			position: absolute; 
+			z-index: 10;
+			pointer-events: none; 
+			color: #fff; 
 			background-color: #333;
-			height: 40px;
+			height: 40px; 
 			display: flex;
 			align-items: center;
-			pointer-events: none;
-			padding: 0 2px;
-			border-top: 1px solid #444;
-			border-bottom: 1px solid #444;
-			margin: 0;
-			z-index: 1;
+			font-size: 1.25rem;
+			line-height: 1;
 		}
 
 		/* --- END CHIME SELECTOR STYLES --- */
 		
-		
-		/* --- TIMER SELECTOR STYLES (Re-implemented colon) --- */
 		
 		/* Timer Selectors Wrapper */
 		#timer-select-wrapper {
@@ -204,7 +200,6 @@
 			width: 130px; 
 			padding: 0; 
 			border: none;
-			background-color: #333; 
 		}
 		
 		/* Timer Select Elements */
@@ -224,42 +219,53 @@
 			background-position: right 8px center;
 			background-size: 8px; 
 			text-align: center;
-			box-sizing: border-box;
 		}
 
-		/* Timer Minutes Select - Left side */
 		#timer-minutes-select {
-			width: 50%; 
-			border-right: none; /* CRITICAL: Remove border-right to show colon's border */
+			width: 65px; 
+			border-right: none;
 			border-radius: 6px 0 0 6px;
 			padding-right: 20px;
 		}
-		/* Timer Seconds Select - Right side */
 		#timer-seconds-select {
-			width: 50%; 
-			border-left: none; /* CRITICAL: Remove border-left to show colon's border */
+			width: 65px; 
 			border-radius: 0 6px 6px 0;
-			padding-left: 20px;
+			padding-right: 20px;
 		}
 		
-		/* Colon separator between minute/second selectors (Same styling as Chime) */
+		/* Colon separator between minute/second selectors */
 		#timer-select-wrapper > span {
-			color: #fff;
-			font-size: 1.25rem;
-			line-height: 1;
+			position: absolute; 
+			z-index: 10;
+			pointer-events: none; 
+			color: #fff; 
 			background-color: #333;
-			height: 40px;
+			height: 40px; 
 			display: flex;
 			align-items: center;
-			pointer-events: none;
-			padding: 0 2px;
-			border-top: 1px solid #444;
-			border-bottom: 1px solid #444;
-			margin: 0;
-			z-index: 1;
+			font-size: 1.25rem;
+			line-height: 1;
 		}
 
-		/* --- END TIMER SELECTOR STYLES --- */
+		/* Start/Stop button size */
+		#timer-start-stop-button {
+			width: 60px; 
+			height: 38px; 
+			font-weight: bold;
+			border-radius: 0.375rem;
+			transition: background-color 0.2s, transform 0.1s;
+			padding: 0; 
+			font-size: 0.875rem; 
+		}
+		.start-state {
+			background-color: #22c55e;
+			color: white;
+		}
+		.stop-state {
+			background-color: #ef4444;
+			color: white;
+		}
+		/* --- END ALIGNED INPUT STYLES FIX --- */
 
 		/* General UI styles (Unchanged) */
 		.alarm-flashing {
@@ -424,7 +430,7 @@
 					<div class="flex items-center space-x-4 gap-2"> 
 						<div id="timer-select-wrapper" class="aligned-input">
 							<select id="timer-minutes-select" onchange="updateTimerDuration()" class="focus:border-blue-500"></select>
-							<span class="text-lg px-1 pointer-events-none">:</span> 
+							<span class="text-lg px-1 pointer-events-none">:</span>
 							<select id="timer-seconds-select" onchange="updateTimerDuration()" class="focus:border-blue-500"></select>
 						</div>
 						<button id="timer-start-stop-button" class="start-state">Start</button>
@@ -575,16 +581,11 @@
 		secondsDisplay.textContent = String(seconds).padStart(2, '0');
 
 		// BLINK LOGIC
-		// The main colon is intentionally always visible unless the user has seconds turned off
-		// AND the timer is not running. This follows your request to keep the colon visible
-		// when seconds are displayed or when the timer is in use.
-		if (!userState.showSeconds && !userState.isTimerRunning) {
+		if (!userState.showSeconds) {
 			colonSeparator.style.visibility = (seconds % 2 === 0) ? 'visible' : 'hidden';
 		} else {
-			// Ensure visibility is always set to visible if seconds are shown or timer is running
 			colonSeparator.style.visibility = 'visible';
 		}
-
 
 		// --- SCREEN AWAKE MAINTENANCE CHECK (NEW INTEGRATION) ---
 		// Check the lock status every 30 seconds (0 and 30 seconds mark)
@@ -992,6 +993,7 @@
                     wakeLockSentinel.addEventListener('release', async () => {
                         console.log('Wake Lock was released by the OS. Re-acquiring...');
                         
+                        // Check user state again before re-requesting
                         if (userState.isKeptAwake) {
                             // Re-run the request logic to acquire the lock again
                             await toggleKeepAwake(true); 
@@ -1166,7 +1168,7 @@
 		
 		// 1. Populate selectors first
 		populateTimerSelectors(); 
-		populateChimeSelectors(); 
+		populateChimeSelectors(); // 👈 New: Populate chime selectors
 
 		// 2. Set the chime time value based on saved state
 		const [h, m] = userState.chimeTime.split(':');
