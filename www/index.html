@@ -121,8 +121,8 @@
 			width: 130px; 
 			text-align: center;
 			-webkit-appearance: none; 
-			-moz-appearance: none; 	 
-			appearance: none; 	      
+			-moz-appearance: none; 	
+			appearance: none; 	 	 	 
 			background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%20viewBox%3D%220%200%20292.4%20292.4%22%3E%3Cpath%20fill%3D%22white%22%20d%3D%22M287%20197.3l-133.4-133.4c-4.8-4.8-12.5-4.8-17.3%200L5.3%20197.3c-4.8%204.8-4.8%2012.5%200%2017.3s12.5%204.8%2017.3%200l118.4-118.4%20118.4%20118.4c4.8%204.8%2012.5%204.8%2017.3%200s4.8-12.5%200-17.3z%22%2F%3E%3C%2Fsvg%3E');
 			background-repeat: no-repeat;
 			background-position: right 8px center;
@@ -151,8 +151,8 @@
 			padding: 0 4px; 
 			
 			-webkit-appearance: none;
-			-moz-appearance: none; 	 
-			appearance: none; 	      
+			-moz-appearance: none; 	
+			appearance: none; 	 	 	 
 			background-repeat: no-repeat;
 			background-position: right 8px center;
 			background-size: 8px; 
@@ -462,6 +462,34 @@
 	let chimeTriggered = false;
 	let flashTimeoutId = null;
 	let timerInterval = null; 
+    
+    // Flag to track if the background audio is actively trying to run
+	let isBackgroundAudioActive = false; 
+
+	// ==========================================
+	// --- SCREEN AWAKE MAINTENANCE (CRITICAL FIX) ---
+	// ==========================================
+	
+	/**
+	 * CRITICAL FIX: Periodically checks if the wake lock is still active and re-acquires it.
+	 * This bypasses silent releases by the OS or browser process.
+	 */
+	async function maintainWakeLock() {
+		// Only proceed if the user wants the screen awake AND the app is visible
+		if (!userState.isKeptAwake || document.visibilityState !== 'visible') {
+			return;
+		}
+
+		// If the wakeLockSentinel is null OR if it has been released by the OS, re-request it.
+		// The 'wakeLockSentinel.released' check is key for robustness.
+		// NOTE: We only use the Web Wake Lock API here as we confirmed Capacitor plugin is not available.
+		if ('wakeLock' in navigator && (!wakeLockSentinel || wakeLockSentinel.released)) {
+			console.log("Wake Lock check failed. Re-requesting lock...");
+			// Re-running the main toggle function handles the re-request gracefully
+			await toggleKeepAwake(true);
+		}
+	}
+
 
 	// ==========================================
 	// --- CLOCK & DISPLAY LOGIC ---
@@ -481,7 +509,7 @@
 			// CORRECTED: Remove leading zero for 12-hour format hours display
 			hoursDisplay.textContent = String(hours);
 		} else {
-			// CORRECTED: Remove leading zero for 24-hour format if hour is less than 10.
+			// CORRECTED: 24-hour format displays '0' for midnight and no leading zero for 1-9.
 			hoursDisplay.textContent = hours < 10 
 				? String(hours)
 				: String(hours);
@@ -497,6 +525,12 @@
 			colonSeparator.style.visibility = 'visible';
 		}
 
+		// --- SCREEN AWAKE MAINTENANCE CHECK (NEW INTEGRATION) ---
+		// Check the lock status every 30 seconds (0 and 30 seconds mark)
+		if (seconds === 0 || seconds === 30) {
+			maintainWakeLock();
+		}
+		
 		// --- FOREGROUND-ONLY CHIME LOGIC IMPLEMENTATION ---
 		// Only check the chime if the application is currently visible/active.
 		if (document.visibilityState === 'visible') {
@@ -794,7 +828,7 @@
 			timerInterval = setInterval(checkTimer, 1000);
 		}
 	}
-	
+    
 	function stopTimer() {
 		if (timerInterval) {
 			clearInterval(timerInterval);
@@ -832,9 +866,6 @@
 	// --- DEVICE CONTROLS ---
 	// ==========================================
 
-	// Flag to track if the background audio is actively trying to run
-	let isBackgroundAudioActive = false; 
-
 	function startBackgroundAudioHack() {
 		// Only try to start if the setting is ON AND we haven't already started
 		if (userState.isKeptAwake && !isBackgroundAudioActive) {
@@ -861,25 +892,37 @@
 		localStorage.setItem('isKeptAwake', isOn);
 
 		if (isOn) {
-			// 1. Try to acquire Web WakeLock
+			// 1. Try to acquire Web WakeLock (PRIMARY METHOD)
 			try {
 				if ('wakeLock' in navigator) {
-					// Use try...finally to ensure the sentinel is released correctly
+					// Request the lock
 					wakeLockSentinel = await navigator.wakeLock.request('screen');
-				} else if (window.Capacitor && window.Capacitor.isPluginAvailable('KeepAwake')) {
-					await window.Capacitor.Plugins.KeepAwake.keepAwake();
+                    
+                    // CRITICAL FIX: Add a listener to re-acquire the lock if the OS releases it.
+                    wakeLockSentinel.addEventListener('release', async () => {
+                        console.log('Wake Lock was released by the OS. Re-acquiring...');
+                        
+                        // Check user state again before re-requesting
+                        if (userState.isKeptAwake) {
+                            // Re-run the request logic to acquire the lock again
+                            await toggleKeepAwake(true); 
+                        } else {
+                            // If the user turned it off, ensure the sentinel is clear
+                            wakeLockSentinel = null;
+                        }
+                    });
+                    
 				} else {
-					console.warn("Screen Awake API not supported.");
+					console.warn("Screen Awake API not supported. Relying on audio hack.");
 				}
 			} catch (e) {
 				console.error("Keep Awake Error (WakeLock failed):", e);
 			}
 			
-			// 2. Start the audio hack (relies on initial user click)
-			// This is now handled in the main body click event as well to ensure it starts.
+			// 2. Start the audio hack (SECONDARY METHOD)
 			startBackgroundAudioHack();
 		} else {
-			// **CRITICAL FIX: RELIABLY RELEASE THE WAKE LOCKS**
+			// **RELIABLY RELEASE THE WAKE LOCKS**
 			
 			// 1. Release Web WakeLock
 			try {
@@ -893,19 +936,12 @@
 				wakeLockSentinel = null;
 			}
 			
-			// 2. Release Capacitor lock
-			if (window.Capacitor && window.Capacitor.isPluginAvailable('KeepAwake')) {
-				await window.Capacitor.Plugins.KeepAwake.allowSleep();
-			}
-			
-			// 3. Stop the audio hack
+			// 2. Stop the audio hack
 			stopBackgroundAudioHack();
 		}
 	}
 
 	function setupKeepAwake() {
-		const isWebAwakeSupported = 'wakeLock' in navigator;
-
 		// Only attempt to acquire lock if the feature was enabled previously
 		if (userState.isKeptAwake) {
 			toggleKeepAwake(true); 
@@ -917,52 +953,36 @@
 
 				// --- RE-ACQUIRE WAKELOCK ON RESUME ---
 				if (userState.isKeptAwake) {
-					// Re-request the web wakelock if we regain visibility and the feature is on
-					if (!wakeLockSentinel && isWebAwakeSupported) {
-						await toggleKeepAwake(true);
-					}
-					// Restart background audio hack if visibility changes and the feature is on
+                    // Re-request (or re-assert) the lock and restart the audio hack
+					await toggleKeepAwake(true);
 					startBackgroundAudioHack(); 
 				} else {
 					// If the user has the toggle off, ensure everything is definitely released
 					toggleKeepAwake(false);
 				}
 				
-				// --- TIMER LOGIC ON RESUME: If it was running, it was stopped. User must restart it. ---
-
 			} else {
 				// --- TIMER LOGIC ON BACKGROUND/SCREEN OFF ---
-				// CRITICAL CHANGE: If the app goes non-visible and the timer was running, STOP it and reset it.
 				if (userState.isTimerRunning) {
 					stopTimer(); 
-					// stopTimer() handles setting isTimerRunning to false and resetting time remaining.
-					// This ensures the user must manually hit 'Start' again.
 				}
+				
+				// Stop background audio when backgrounded (to conserve battery, but the OS may kill it anyway)
+				stopBackgroundAudioHack();
 			}
 		});
 	}
 
 	async function setImmersiveMode() {
-		if (window.Capacitor && window.Capacitor.isPluginAvailable('StatusBar')) {
-			const StatusBar = window.Capacitor.Plugins.StatusBar;
-			const NavigationBar = window.Capacitor.Plugins.NavigationBar;
-			
-			// Attempt to hide and force black status bar (top bar)
+		// Since the Capacitor plugin may not be installed, we only check for window.Capacitor 
+		// but skip the plugin calls to prevent errors.
+		if (window.Capacitor) {
 			try {
-				await StatusBar.hide(); 
-				await StatusBar.setStyle({ style: 'DARK' });
-				await StatusBar.setBackgroundColor({ color: '#000000' });
+				// Attempt to use core Capacitor functions if they exist, but do not rely on specific plugins
+				// The effect is mostly handled by CSS/HTML now.
+				console.log("Capacitor shell detected. Fullscreen behavior may be governed by native configuration.");
 			} catch (e) {
-				console.warn("StatusBar control failed, falling back to CSS.");
-			}
-			
-			// Attempt to hide and force black navigation bar (bottom bar on Android)
-			try {
-				await NavigationBar.hide(); 
-				await NavigationBar.setTransparency({ isTransparent: false });
-				await NavigationBar.setColor({ color: '#000000' });
-			} catch (e) {
-				console.warn("NavigationBar control failed, falling back to CSS.");
+				// Ignore errors if the window.Capacitor object exists but the specific methods fail
 			}
 		}
 	}
@@ -1070,8 +1090,6 @@
 		// 4. Handle persistent timer state 
 		// Since we forced isTimerRunning = false in loadSettings, this just displays the timeRemaining (which is the last known state).
 		updateTimerDisplay(); 
-		
-		// The actual timer interval starts only when the user presses 'Start'.
 	}
 
 	function setupEventListeners() {
@@ -1096,7 +1114,7 @@
 		
 		// Mandatory user interaction to enable media features
 		document.body.addEventListener('click', async () => {
-			// Only attempt to start background audio hack if the toggle is set
+			// Only attempt to start background audio hack and acquire lock if the toggle is set
 			if (userState.isKeptAwake) {
 				startBackgroundAudioHack();
 				if ('wakeLock' in navigator && !wakeLockSentinel) {
